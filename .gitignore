@@ -1,0 +1,27 @@
+# Dependencies
+/node_modules
+/dist
+/dist-electron
+
+# Vite cache
+/.vite
+/node_modules/.vite-temp/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+
+# VSCode
+.vscode
+
+# TypeScript
+*.tsbuildinfo
+
+# others
+database.json
+**/config.json
+settings.json
