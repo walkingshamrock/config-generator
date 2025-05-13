@@ -56,8 +56,12 @@ const App: React.FC = () => {
         if (isMounted) {
           console.log("Loaded initial settings.json:", cfg);
           setSettings(cfg);
-          if (cfg.platforms && cfg.platforms.length > 0 && !platform) { // Set initial platform only if not already set
-            setPlatform(cfg.platforms[0].name);
+          const savedPlatform = localStorage.getItem('selectedPlatform');
+          if (cfg.platforms && cfg.platforms.length > 0 && !platform) {
+            const initialPlatform = savedPlatform && cfg.platforms.some(p => p.name === savedPlatform)
+              ? savedPlatform
+              : cfg.platforms[0].name;
+            setPlatform(initialPlatform);
           }
           setSettingsError(null);
         }
@@ -269,7 +273,11 @@ const App: React.FC = () => {
         <select
           className="w-full border border-gray-300 rounded p-2 bg-white text-black dark:bg-tokyo-night-line dark:border-tokyo-night-comment dark:text-tokyo-night-foreground"
           value={platform}
-          onChange={e => setPlatform(e.target.value as Platform)}
+          onChange={e => {
+            const newPlatform = e.target.value as Platform;
+            setPlatform(newPlatform);
+            localStorage.setItem('selectedPlatform', newPlatform);
+          }}
         >
           {settings?.platforms.map(p => (
             <option key={p.name} value={p.name}>
