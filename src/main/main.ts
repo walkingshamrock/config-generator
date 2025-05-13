@@ -210,27 +210,31 @@ function setupFileWatcher(filePath: string) {
       (curr.size === 0 && prev.size > 0)
     ) {
       console.log(`Change detected in ${filePath}. Reloading...`);
-      try {
-        const rawData = fs.readFileSync(filePath, "utf-8");
-        const newConfig = JSON.parse(rawData);
-        databaseConfig = newConfig; // Update the global config
-        console.log("database.json reloaded successfully.");
-        if (mainWindow && !mainWindow.isDestroyed()) {
-          // Send 'database-updated' for consistency with settings reload
-          mainWindow.webContents.send("database-updated", databaseConfig);
+      
+      // Add a small delay to ensure the file is completely written
+      setTimeout(() => {
+        try {
+          const rawData = fs.readFileSync(filePath, "utf-8");
+          const newConfig = JSON.parse(rawData);
+          databaseConfig = newConfig; // Update the global config
+          console.log("database.json reloaded successfully.");
+          if (mainWindow && !mainWindow.isDestroyed()) {
+            // Send 'database-updated' for consistency with settings reload
+            mainWindow.webContents.send("database-updated", databaseConfig);
+          }
+        } catch (error: any) {
+          console.error(
+            `Failed to reload database.json from ${filePath}:`,
+            error
+          );
+          // Don't clear databaseConfig on error to maintain previous state
+          if (mainWindow && !mainWindow.isDestroyed()) {
+            mainWindow.webContents.send("database-error", {
+              message: `Failed to reload ${filePath}: ${error.message}`,
+            });
+          }
         }
-      } catch (error: any) {
-        console.error(
-          `Failed to reload database.json from ${filePath}:`,
-          error
-        );
-        databaseConfig = null; // Clear on error
-        if (mainWindow && !mainWindow.isDestroyed()) {
-          mainWindow.webContents.send("database-error", {
-            message: `Failed to reload ${filePath}: ${error.message}`,
-          });
-        }
-      }
+      }, 500); // 500ms delay to ensure file is completely written
     }
   });
   console.log(`Watching ${filePath} for changes.`);
