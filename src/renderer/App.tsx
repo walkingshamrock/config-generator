@@ -252,20 +252,21 @@ const App: React.FC = () => {
 
   return (
     <div className="p-6 max-w-xl mx-auto bg-white dark:bg-tokyo-night text-black dark:text-tokyo-night-foreground min-h-screen">
-      <h1 className="text-2xl font-bold mb-4">Config Generator</h1>
-
-      <div className="mb-4">
-        <label htmlFor="theme-select" className="block mb-1 font-medium">Color Theme</label>
-        <select
-          id="theme-select"
-          className="w-full border border-gray-300 rounded p-2 bg-white text-black dark:bg-tokyo-night-line dark:border-tokyo-night-comment dark:text-tokyo-night-foreground"
-          value={theme}
-          onChange={e => setTheme(e.target.value as Theme)}
-        >
-          <option value="light">Light</option>
-          <option value="dark">Dark</option>
-          <option value="system">System</option>
-        </select>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold">Config Generator</h1>
+        <div>
+          <label htmlFor="theme-select" className="block mb-1 font-medium">Color Theme</label>
+          <select
+            id="theme-select"
+            className="border border-gray-300 rounded p-2 bg-white text-black dark:bg-tokyo-night-line dark:border-tokyo-night-comment dark:text-tokyo-night-foreground"
+            value={theme}
+            onChange={e => setTheme(e.target.value as Theme)}
+          >
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+            <option value="system">System</option>
+          </select>
+        </div>
       </div>
 
       <div className="mb-4">
